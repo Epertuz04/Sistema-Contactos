@@ -10,4 +10,5 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Contacto> Contactos { get; set; }
+    public DbSet<Usuario> Usuarios { get; set; }
 }
