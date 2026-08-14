@@ -1,0 +1,74 @@
+@model List<Contacto>
+
+@{
+    ViewData["Title"] = "Catálogo de Contactos";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="@Url.Action("Create", "Contactos")" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Nuevo Contacto
+            </a>
+            <a href="@Url.Action("Logout", "Account")" class="btn btn-danger ms-2">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Cédula</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
+                        <th>Edad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var contacto in Model)
+                    {
+                        <tr>
+                            <td>@contacto.Cedula</td>
+                            <td>@contacto.Nombre</td>
+                            <td>@contacto.Apellidos</td>
+                            <td>@contacto.Telefono</td>
+                            <td>@contacto.Direccion</td>
+                            <td>
+                                <span class="badge bg-info">@contacto.Edad años</span>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Contactos", new { id = contacto.Id })" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a href="@Url.Action("Delete", "Contactos", new { id = contacto.Id })" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar este contacto?');">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center" role="alert">
+            <i class="bi bi-info-circle"></i> No hay contactos registrados. 
+            <a href="@Url.Action("Create", "Contactos")" class="alert-link">Crear el primer contacto</a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
