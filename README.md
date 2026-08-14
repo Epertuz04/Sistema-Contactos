@@ -227,8 +227,6 @@ dotnet ef database update
 -  Configurar CORS si es necesario
 
 
-##  Historial de Cambios
-
 ### Versión 1.0 (2026-08-14)
   Implementación completa del CRUD de contactos
   Sistema de autenticación seguro
@@ -237,5 +235,8 @@ dotnet ef database update
   Validaciones completas
   Cálculo automático de edad
 
+## Enlace
+ 
+ Repositorio GitHub: https://github.com/Epertuz04/Sistema-Contactos.git
 
 **Desarrollado Por: Erick Pertuz usando ASP.NET Core 8.0**
