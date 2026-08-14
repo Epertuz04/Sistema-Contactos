@@ -148,4 +148,53 @@ public class ContactosController : Controller
     {
         return _context.Contactos.Any(e => e.Id == id);
     }
+
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (!IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var contacto = await _context.Contactos.FirstOrDefaultAsync(m => m.Id == id);
+        if (contacto == null)
+        {
+            return NotFound();
+        }
+
+        return View(contacto);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        if (!IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        try
+        {
+            var contacto = await _context.Contactos.FindAsync(id);
+            if (contacto != null)
+            {
+                _context.Contactos.Remove(contacto);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation($"Contacto {contacto.Nombre} {contacto.Apellidos} eliminado exitosamente.");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error al eliminar contacto con ID {id}.");
+            TempData["ErrorMessage"] = "Error al eliminar el contacto. Por favor, intente nuevamente.";
+            return RedirectToAction(nameof(Index));
+        }
+    }
 }

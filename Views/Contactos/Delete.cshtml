@@ -1,0 +1,75 @@
+@model Contacto
+
+@{
+    ViewData["Title"] = "Eliminar Contacto";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="alert alert-warning" role="alert">
+                <i class="bi bi-exclamation-triangle"></i>
+                <strong>¡Advertencia!</strong> Esta acción no se puede deshacer.
+            </div>
+
+            <h2 class="text-danger">@ViewData["Title"]</h2>
+            <p>Está a punto de eliminar el siguiente contacto. Por favor, confirme que desea continuar.</p>
+
+            <div class="card mt-4 border-danger">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Cédula:</strong>
+                            <p>@Model.Cedula</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Nombre:</strong>
+                            <p>@Model.Nombre</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Apellidos:</strong>
+                            <p>@Model.Apellidos</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Edad:</strong>
+                            <p>
+                                <span class="badge bg-info">@Model.Edad años</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Teléfono:</strong>
+                            <p>@Model.Telefono</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Dirección:</strong>
+                            <p>@Model.Direccion</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Delete" method="post" class="mt-4">
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Confirmar Eliminación
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
