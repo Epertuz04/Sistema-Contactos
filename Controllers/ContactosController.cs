@@ -78,4 +78,74 @@ public class ContactosController : Controller
             return View(contacto);
         }
     }
+
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (!IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var contacto = await _context.Contactos.FindAsync(id);
+        if (contacto == null)
+        {
+            return NotFound();
+        }
+
+        return View(contacto);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Contacto contacto)
+    {
+        if (!IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        if (id != contacto.Id)
+        {
+            return NotFound();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(contacto);
+        }
+
+        try
+        {
+            _context.Update(contacto);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Contacto {contacto.Nombre} {contacto.Apellidos} actualizado exitosamente.");
+            return RedirectToAction(nameof(Index));
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            if (!ContactoExists(contacto.Id))
+            {
+                return NotFound();
+            }
+            _logger.LogError(ex, "Error de concurrencia al actualizar contacto.");
+            ModelState.AddModelError("", "Error al actualizar el contacto. Intente nuevamente.");
+            return View(contacto);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error al actualizar contacto {contacto.Nombre}.");
+            ModelState.AddModelError("", "Error al guardar los cambios. Por favor, intente nuevamente.");
+            return View(contacto);
+        }
+    }
+
+    private bool ContactoExists(int id)
+    {
+        return _context.Contactos.Any(e => e.Id == id);
+    }
 }
