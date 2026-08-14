@@ -40,4 +40,42 @@ public class ContactosController : Controller
             return View(new List<Contacto>());
         }
     }
+
+    public IActionResult Create()
+    {
+        if (!IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Contacto contacto)
+    {
+        if (!IsAuthenticated())
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(contacto);
+        }
+
+        try
+        {
+            _context.Add(contacto);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Contacto {contacto.Nombre} {contacto.Apellidos} creado exitosamente.");
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error al crear contacto {contacto.Nombre}.");
+            ModelState.AddModelError("", "Error al guardar el contacto. Por favor, intente nuevamente.");
+            return View(contacto);
+        }
+    }
 }
